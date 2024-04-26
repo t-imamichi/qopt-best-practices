@@ -85,6 +85,22 @@ def load_data(qp):
 
     return depth_one_heron, depth_zero_heron, depth_one_eagle, depth_zero_eagle
 
+# auxiliary function to load saved samples
+def load_data_name(qp, backend_name):
+    depth_one, depth_zero = {}, {}
+    for file in os.listdir("sampler_data/"):
+        with open(f"sampler_data/{file}", "r") as fin:
+            data = json.load(fin)
+
+        if file.startswith(backend_name):
+            depth_one.update(data["depth-one"])
+            depth_zero.update(data["depth-zero"])
+
+    depth_zero = samples_to_objective_values(depth_zero, qp)
+    depth_one = samples_to_objective_values(depth_one, qp)
+
+    return depth_one, depth_zero
+
 
 # auxiliary function to load the QP from the saved Paulis
 def load_qp():
